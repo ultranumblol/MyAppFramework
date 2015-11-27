@@ -1,5 +1,6 @@
 package com.wgz.ant.myappframework;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -164,5 +165,20 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    /**
+
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String result = data.getExtras().getString("result");
+        //Log.i("xml", result + "111111111111111111111");
+        //Log.i("xml", fragmentList.get(1).getId() + "ididididididididi");
+        Fragment f = getSupportFragmentManager().findFragmentById(fragments.get(1).getId());
+        f.onActivityResult(requestCode, resultCode, data);
     }
 }

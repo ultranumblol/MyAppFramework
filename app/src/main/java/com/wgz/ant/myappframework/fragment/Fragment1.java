@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.wgz.ant.myappframework.ContantActivity;
 import com.wgz.ant.myappframework.R;
 import com.wgz.ant.myappframework.adapter.SimpleTreeAdapter;
 import com.wgz.ant.myappframework.adapter.TreeListViewAdapter;
@@ -142,11 +143,10 @@ public class Fragment1 extends Fragment {
                                 if (node.isLeaf()) {
                                     String tielename = node.getName();
 
-                                    //int setctorid = node.getId();
+                                    int setctorid = node.getId();
                                     Intent intent = new Intent();
-                                   // intent.setClass(getActivity(), ContactsActivity.class);
-
-                                   // intent.putExtra("sid", setctorid);
+                                    intent.setClass(getActivity(), ContantActivity.class);
+                                    intent.putExtra("sid", setctorid);
                                     intent.putExtra("title", tielename);
                                     getActivity().startActivityForResult(intent, 0);
                                 }
@@ -194,10 +194,10 @@ public class Fragment1 extends Fragment {
                             String tielename = node.getName();
 
                             int setctorid = node.getId();
-                           // Intent intent = new Intent(getActivity(), ContactsActivity.class);
-                           // intent.putExtra("sid", setctorid);
-                           // intent.putExtra("title", tielename);
-                           // getActivity().startActivityForResult(intent, 0);
+                            Intent intent = new Intent(getActivity(), ContantActivity.class);
+                           intent.putExtra("sid", setctorid);
+                            intent.putExtra("title", tielename);
+                           getActivity().startActivityForResult(intent, 0);
 
                         }
                     }
