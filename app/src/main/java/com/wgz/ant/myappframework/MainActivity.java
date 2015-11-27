@@ -46,28 +46,24 @@ public class MainActivity extends AppCompatActivity
             rootlayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
             tabLayout = (TabLayout) findViewById(R.id.tabs);
             List<String> titles = new ArrayList<>();
-            titles.add("碎片1");
-            titles.add("碎片2");
-            titles.add("碎片3");
-            titles.add("碎片4");
+            titles.add("组织机构");
+            titles.add("联系人");
+
 
             mViewpager = (ViewPager) findViewById(R.id.viewpager_main);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            toolbar.setTitle("你的APP名称");
+            toolbar.setTitle("蚂蚁集团通讯录");
             setSupportActionBar(toolbar);
             fragment1 = new Fragment1();
             fragment2 = new Fragment2();
-            fragment3 = new Fragment3();
-            fragment4 = new Fragment4();
+
             tabLayout.addTab(tabLayout.newTab().setText(titles.get(0)));
             tabLayout.addTab(tabLayout.newTab().setText(titles.get(1)));
-            tabLayout.addTab(tabLayout.newTab().setText(titles.get(2)));
-            tabLayout.addTab(tabLayout.newTab().setText(titles.get(3)));
+
             fragments = new ArrayList<>();
             fragments.add(fragment1);
             fragments.add(fragment2);
-            fragments.add(fragment3);
-            fragments.add(fragment4);
+
             FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), fragments, titles);
 
             mViewpager.setAdapter(adapter);
@@ -78,8 +74,8 @@ public class MainActivity extends AppCompatActivity
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "这是一个浮动按钮", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Snackbar.make(view, "同步成功！", Snackbar.LENGTH_LONG)
+                            .setAction("同步", null).show();
                 }
             });
 

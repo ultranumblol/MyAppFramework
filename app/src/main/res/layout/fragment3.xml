@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="联系人"
+            android:textSize="22dip"
+
+            android:layout_centerInParent="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分组管理"
+            android:layout_centerVertical="true"
+            android:id="@+id/addgroup"
+            android:layout_marginRight="10dip"
+
+            android:layout_alignParentRight="true"
+            android:textSize="15dp"
+
+            />
+        <ImageView
+            android:layout_width="15dip"
+            android:layout_height="15dip"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="73dip"
+            android:id="@+id/jiahao_img"
+            android:src="@drawable/label_confirm"/>
+    </RelativeLayout>
+    <ExpandableListView
+        android:id ="@+id/expandableListView"
+        android:layout_width ="fill_parent"
+        android:layout_height ="wrap_content"
+
+
+        >
+    </ExpandableListView>
+</LinearLayout>

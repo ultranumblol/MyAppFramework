@@ -3,13 +3,11 @@ package com.wgz.ant.myappframework.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.wgz.ant.myappframework.R;
-import com.wgz.ant.myappframework.adapter.RecycleAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +18,7 @@ import java.util.Map;
  * Created by qwerr on 2015/11/25.
  */
 public class Fragment4 extends Fragment {
-    RecyclerView mrecyclerView;
+   // RecyclerView mrecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,13 +29,13 @@ public class Fragment4 extends Fragment {
     }
 
     private void initview(View view) {
-        mrecyclerView = (RecyclerView) view.findViewById(R.id.recycler_frag1);
+       // mrecyclerView = (RecyclerView) view.findViewById(R.id.recycler_frag1);
         // 创建一个线性布局管理器
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // 设置布局管理器
-        mrecyclerView.setLayoutManager(layoutManager);
+       // mrecyclerView.setLayoutManager(layoutManager);
 
-        mrecyclerView.setAdapter(new RecycleAdapter(data()));
+       // mrecyclerView.setAdapter(new RecycleAdapter(data()));
 
     }
 
