@@ -9,10 +9,10 @@ import android.util.Log;
  * Created by qwerr on 2015/11/27.
  */
 public class CheckNetWork {
-    private Context context;
 
-    public CheckNetWork(Context context) {
-        this.context = context;
+
+    public CheckNetWork() {
+
     }
     /**
      * 判断网络状态

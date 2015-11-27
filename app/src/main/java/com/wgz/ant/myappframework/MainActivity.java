@@ -17,13 +17,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.wgz.ant.myappframework.adapter.FragmentAdapter;
 import com.wgz.ant.myappframework.fragment.Fragment1;
 import com.wgz.ant.myappframework.fragment.Fragment2;
-import com.wgz.ant.myappframework.fragment.Fragment3;
-import com.wgz.ant.myappframework.fragment.Fragment4;
+import com.wgz.ant.myappframework.util.CheckNetWork;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +33,6 @@ public class MainActivity extends AppCompatActivity
     private ViewPager mViewpager;
     private Fragment1 fragment1;
     private Fragment2 fragment2;
-    private Fragment3 fragment3;
-    private Fragment4 fragment4;
     private List<Fragment> fragments;
     private TabLayout tabLayout;
     private CoordinatorLayout rootlayout;
@@ -75,8 +74,31 @@ public class MainActivity extends AppCompatActivity
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "同步成功！", Snackbar.LENGTH_LONG)
-                            .setAction("同步", null).show();
+                    boolean net =false;
+                    CheckNetWork cnet = new CheckNetWork();
+                    net=cnet.checkNetWorkStatus(getApplicationContext());
+                    if (net==false){
+                        Snackbar.make(rootlayout,"没有网络！",Snackbar.LENGTH_SHORT).setAction("同步",null).show();
+                    }else{
+                        Snackbar.make(rootlayout,"点击同步更新",Snackbar.LENGTH_LONG).setAction("同步", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                File file= new File("/data/data/"+MainActivity.this.getPackageName().toString()+"/shared_prefs","finals.xml");
+                                if(file.exists()){
+                                    file.delete();
+                                    Intent intent = MainActivity.this.getIntent();
+                                    MainActivity.this.finish();
+                                    startActivity(intent);
+                                    Toast.makeText(getApplicationContext(), "同步成功！", Toast.LENGTH_SHORT).show();
+                                   // Snackbar.make(rootlayout,"同步成功！",Snackbar.LENGTH_SHORT).setAction("同步", null).show();
+                                }else {
+                                    Snackbar.make(rootlayout,"数据已经是最新！",Snackbar.LENGTH_SHORT).setAction("同步", null).show();
+
+                                }
+                            }
+                        }).show();
+                    }
+
                 }
             });
 
@@ -117,17 +139,26 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Snackbar.make(rootlayout, "设置个毛", Snackbar.LENGTH_LONG)
-                    .setAction("Action", new View.OnClickListener() {
+            Snackbar.make(rootlayout, "确认注销？", Snackbar.LENGTH_LONG)
+                    .setAction("注销", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            File file= new File("/data/data/"+MainActivity.this.getPackageName().toString()+"/shared_prefs","autologin.xml");
+                            if(file.exists()){
+                                file.delete();
 
+                                Toast.makeText(getApplicationContext(),"注销成功！",Toast.LENGTH_SHORT).show();
+                                // Snackbar.make(rootlayout,"同步成功！",Snackbar.LENGTH_SHORT).setAction("同步", null).show();
+                            }else{
+                                Toast.makeText(getApplicationContext(),"注销成功！",Toast.LENGTH_SHORT).show();
+
+                            }
                         }
                     }).show();
 
             return true;
         }
-        if (id == R.id.action_add) {
+       /* if (id == R.id.action_add) {
             Snackbar.make(rootlayout, "music！", Snackbar.LENGTH_LONG)
                     .setAction("Action", new View.OnClickListener() {
                         @Override
@@ -137,7 +168,7 @@ public class MainActivity extends AppCompatActivity
                     }).show();
 
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
