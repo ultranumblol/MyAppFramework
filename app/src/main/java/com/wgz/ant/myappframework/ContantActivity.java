@@ -1,31 +1,41 @@
 package com.wgz.ant.myappframework;
 
+import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.wgz.ant.myappframework.db.DatabaseHelper;
 import com.wgz.ant.myappframework.util.OnDataFinishedListener;
 import com.wgz.ant.myappframework.util.PraserPeoXML;
 import com.wgz.ant.myappframework.util.SpUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ContantActivity extends AppCompatActivity {
-    DatabaseHelper dbh ;
+    DatabaseHelper dbh;
     private List<Map<String, Object>> peos;//联系人列表
     private List<Map<String, Object>> peos2;
     SimpleAdapter simpleAdapter;
     SpUtil spUtil;
 
     private ListView list1;//下方联系人列表
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +45,7 @@ public class ContantActivity extends AppCompatActivity {
         initquery();
 
     }
+
     @Override
     public void finish() {
         //数据是使用Intent返回
@@ -56,16 +67,66 @@ public class ContantActivity extends AppCompatActivity {
                 //把返回数据存入Intent
                 intent.putExtra("result", "该刷新了");
                 //设置返回数据
-                setResult(RESULT_OK,intent);
-                ContantActivity.this.finish();
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
         list1 = (ListView) findViewById(R.id.list_1);
+        //短按打电话监听
+        list1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                final TextView name = (TextView) arg1.findViewById(R.id.name);
+                final TextView phone = (TextView) arg1.findViewById(R.id.number);
+                final TextView rank = (TextView) arg1.findViewById(R.id.rank);
+                //添加数据到数据库最近联系人
+                insert2(name.getText().toString(), phone.getText().toString(), 2 + "", rank.getText().toString());
+                Intent dialIntent = new Intent(Intent.ACTION_CALL, Uri
+                        .parse("tel:" + phone.getText().toString()));
+                if (ActivityCompat.checkSelfPermission(ContantActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                startActivity(dialIntent);
+
+            }
+        });
+
     }
+    /**
+     * 插入数据到最近联系人
+     * @param name
+     * @param phone
+     */
+    private void insert2(String name,String phone,String pid,String rank){
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String date = sDateFormat.format(new java.util.Date());
+        SQLiteDatabase db = dbh.getWritableDatabase();
+        ContentValues cv = new ContentValues();//实例化一个cv 用来装数据
+        cv.put("name", name);
+        cv.put("phone", phone);
+        cv.put("pid",pid);
+        cv.put("rank",rank);
+        cv.put("date", date);
+        db.insert("content1", null, cv);//插入操作
+        db.close();
+
+    }
+
     //初始化数据库
     private void initdb() {
         dbh = new DatabaseHelper(this);
     }
+
+    //初始化查询方法
     private void initquery(){
 
 

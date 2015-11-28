@@ -53,7 +53,7 @@ public class PullPeopleparser implements PeopleParser {
                         event=pullParser.next();
                         people.setPhone(pullParser.getText());
                     }
-                    else if (pullParser.getName().equals("ranke")) {
+                    else if (pullParser.getName().equals("position")) {
                         event=pullParser.next();
                         people.setRank(pullParser.getText());
                     }
