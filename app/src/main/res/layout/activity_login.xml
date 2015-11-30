@@ -11,6 +11,11 @@
     tools:context="com.wgz.ant.myappframework.LoginActivity">
 
     <!-- Login progress -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/logo22"/>
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -62,11 +67,18 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自动登录"
+                android:textColor="@color/blue"
+                android:id="@+id/autologin"
+                />
 
             <Button
                 android:id="@+id/email_sign_in_button"
                 style="?android:textAppearanceSmall"
-                android:background="@color/colorAccent"
+                android:background="@color/blue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"

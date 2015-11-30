@@ -3,24 +3,31 @@ package com.wgz.ant.myappframework;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import static android.Manifest.permission.READ_CONTACTS;
+import com.wgz.ant.myappframework.util.CheckLogin;
+import com.wgz.ant.myappframework.util.OnDataFinishedListener;
 
 /**
  * A login screen that offers login via email/password.
@@ -43,15 +50,24 @@ public class LoginActivity extends AppCompatActivity  {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    boolean net;
+    private CheckBox autologin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        String flag =  getsp();
+        if (flag.equals("true")){
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+            finish();
+
+        }
+
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
-        populateAutoComplete();
-
+       setTitle("请登陆");
+        autologin = (CheckBox) findViewById(R.id.autologin);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -63,12 +79,17 @@ public class LoginActivity extends AppCompatActivity  {
                 return false;
             }
         });
-
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                net = checkNetWorkStatus(getApplicationContext());
+                if (net == false) {
+                    Toast.makeText(LoginActivity.this, "请连接网络登陆！", Toast.LENGTH_LONG).show();
+                }else {
+                    attemptLogin();
+                }
+
             }
         });
 
@@ -76,35 +97,27 @@ public class LoginActivity extends AppCompatActivity  {
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
+
+
+    /**
+     * 判断网络状态
+     * @param context
+     * @return
+     */
+    public static boolean checkNetWorkStatus(Context context){
+        boolean result;
+        ConnectivityManager cm=(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netinfo = cm.getActiveNetworkInfo();
+        if ( netinfo !=null && netinfo.isConnected() ) {
+            result=true;
+            Log.i("xml", "The net was connected");
+        }else{
+            result=false;
+            Log.i("xml", "The net was bad!");
         }
-
-
+        return result;
     }
 
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
 
     /**
      * Callback received when a permissions request has been completed.
@@ -114,7 +127,7 @@ public class LoginActivity extends AppCompatActivity  {
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
+
             }
         }
     }
@@ -129,49 +142,62 @@ public class LoginActivity extends AppCompatActivity  {
         if (mAuthTask != null) {
             return;
         }
-
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
+        CheckLogin checkLogin = new CheckLogin(email, password);
+        checkLogin.execute();
 
-        boolean cancel = false;
-        View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
+        final boolean[] cancel = {false};
+        final View[] focusView = {null};
+        checkLogin.setOnDataFinishedListener(new OnDataFinishedListener() {
+            @Override
+            public void onDataSuccessfully(Object data) {
+                if (autologin.isChecked()) {
+                    savesp();
+                }
+                    // Check for a valid password, if the user entered one.
+                    if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+                        mPasswordView.setError(getString(R.string.error_invalid_password));
+                        focusView[0] = mPasswordView;
+                        cancel[0] = true;
+                    }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        }
+                    // Check for a valid email address.
+                    if (TextUtils.isEmpty(email)) {
+                        mEmailView.setError(getString(R.string.error_field_required));
+                        focusView[0] = mEmailView;
+                        cancel[0] = true;
+                    }
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }
+                    if (cancel[0]) {
+                        // There was an error; don't attempt login and focus the first
+                        // form field with an error.
+                        focusView[0].requestFocus();
+                    } else {
+                        // Show a progress spinner, and kick off a background task to
+                        // perform the user login attempt.
+                        showProgress(true);
+                        mAuthTask = new UserLoginTask(email, password);
+                        mAuthTask.execute((Void) null);
+                    }
+
+            }
+
+            @Override
+            public void onDataFailed() {
+                Toast.makeText(LoginActivity.this, "请输入正确的用户名和密码！", Toast.LENGTH_LONG).show();
+                return;
+            }
+        });
+
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
@@ -215,23 +241,6 @@ public class LoginActivity extends AppCompatActivity  {
     }
 
 
-
-
-
-
-
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -251,8 +260,8 @@ public class LoginActivity extends AppCompatActivity  {
             // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
                 Thread.sleep(2000);
+
             } catch (InterruptedException e) {
                 return false;
             }
@@ -269,6 +278,9 @@ public class LoginActivity extends AppCompatActivity  {
 
             if (success) {
                 finish();
+                Toast.makeText(LoginActivity.this,"登录成功！",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -280,6 +292,19 @@ public class LoginActivity extends AppCompatActivity  {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+    //保存登陆状态
+    private void savesp(){
+        SharedPreferences preferences = getSharedPreferences("autologin", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor  = preferences.edit();
+        editor.putString("autologin","true");
+        editor.commit();
+
+    }
+    private String getsp(){
+        SharedPreferences preferences = getSharedPreferences("autologin", Context.MODE_PRIVATE);
+        String flag = preferences.getString("autologin","false");
+        return flag;
     }
 }
 

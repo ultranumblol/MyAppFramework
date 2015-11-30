@@ -2,11 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ExpandableListView
-        android:id ="@+id/expandableListView"
-        android:layout_width ="fill_parent"
-        android:layout_height ="wrap_content"
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         >
-    </ExpandableListView>
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            >
+            <com.wgz.ant.myappframework.view.ExScrollListView
+                android:id ="@+id/expandableListView"
+                android:layout_width ="fill_parent"
+                android:layout_height ="match_parent"
+
+                >
+            </com.wgz.ant.myappframework.view.ExScrollListView>
+
+
+        </android.support.v4.widget.NestedScrollView>
+
+
+    </LinearLayout>
 </LinearLayout>

@@ -10,16 +10,12 @@ import android.util.Log;
  */
 public class CheckNetWork {
 
-
-    public CheckNetWork() {
-
-    }
     /**
      * 判断网络状态
      * @param context
      * @return
      */
-    public static boolean checkNetWorkStatus(Context context){
+        public static boolean checkNetWorkStatus(Context context){
         boolean result;
         ConnectivityManager cm=(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netinfo = cm.getActiveNetworkInfo();

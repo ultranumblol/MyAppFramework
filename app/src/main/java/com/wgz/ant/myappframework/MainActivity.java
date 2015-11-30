@@ -1,6 +1,8 @@
 package com.wgz.ant.myappframework;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -146,8 +148,12 @@ public class MainActivity extends AppCompatActivity
                             File file= new File("/data/data/"+MainActivity.this.getPackageName().toString()+"/shared_prefs","autologin.xml");
                             if(file.exists()){
                                 file.delete();
-
+                                SharedPreferences sp = getSharedPreferences("autologin", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.clear().commit();
+                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                                 Toast.makeText(getApplicationContext(),"注销成功！",Toast.LENGTH_SHORT).show();
+
                                 // Snackbar.make(rootlayout,"同步成功！",Snackbar.LENGTH_SHORT).setAction("同步", null).show();
                             }else{
                                 Toast.makeText(getApplicationContext(),"注销成功！",Toast.LENGTH_SHORT).show();
@@ -180,7 +186,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camara) {
-            // Handle the camera action
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
