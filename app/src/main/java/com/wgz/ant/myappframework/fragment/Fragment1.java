@@ -1,7 +1,13 @@
 package com.wgz.ant.myappframework.fragment;
 
+import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Editable;
@@ -10,10 +16,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.wgz.ant.myappframework.ContantActivity;
 import com.wgz.ant.myappframework.R;
@@ -21,11 +29,13 @@ import com.wgz.ant.myappframework.adapter.SimpleTreeAdapter;
 import com.wgz.ant.myappframework.adapter.TreeListViewAdapter;
 import com.wgz.ant.myappframework.bean.FileBean;
 import com.wgz.ant.myappframework.bean.Node;
+import com.wgz.ant.myappframework.db.DatabaseHelper;
 import com.wgz.ant.myappframework.util.OnDataFinishedListener;
 import com.wgz.ant.myappframework.util.PraserConXML;
 import com.wgz.ant.myappframework.util.PraserPeoXML;
 import com.wgz.ant.myappframework.util.SpUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +48,7 @@ public class Fragment1 extends Fragment {
     private List<FileBean> mDatas = new ArrayList<FileBean>();
     private ImageView ivDeleteText2;
     private EditText etSearch2;
+    DatabaseHelper dbh;
     private TreeListViewAdapter mAdapter;
     private NestedScrollView reboundScrollView,reboundScrollView2;
     private List<Map<String, Object>> peos;//联系人列表
@@ -56,6 +67,7 @@ public class Fragment1 extends Fragment {
     }
 
     private void initview(View view) {
+        dbh = new DatabaseHelper(getActivity());
         reboundScrollView = (NestedScrollView) view.findViewById(R.id.zuzhi_sv);
         reboundScrollView2 = (NestedScrollView) view.findViewById(R.id.zuzhi_sv2);
         mTree = (ListView) view.findViewById(R.id.list_1_1);
@@ -102,37 +114,103 @@ public class Fragment1 extends Fragment {
 
             }
         });
-        initDatas();
-    }
-    private void initAllQuery(){
-        PraserPeoXML qData2 = new PraserPeoXML(0);
-        qData2.execute();
-        qData2.setOnDataFinishedListener(new OnDataFinishedListener() {
-            @Override
-            public void onDataSuccessfully(Object data) {
-                //缓存数据，用sp保存
-                List<Map<String, Object>> huancunpeos1 = new ArrayList<Map<String, Object>>();
-                List<Map<String, Object>> huancunpeos2 = new ArrayList<Map<String, Object>>();
-                huancunpeos1 =(List<Map<String, Object>>) data;
-                huancunpeos2 =(List<Map<String, Object>>) data;
-                spUtil.saveInfo(getActivity(), "huancun" + 0, huancunpeos1);
-                spUtil.saveInfo(getActivity(), "huancun" + 0, huancunpeos2);
-
-
-                peos = (List<Map<String, Object>>) data;
-                peos2 = (List<Map<String, Object>>) data;
-                Log.i("xml", " 联网异步查询成功====peos数据：" + peos.toString());
-                simpleAdapter = new SimpleAdapter
-                        (getActivity(), peos, R.layout.list_contact_item,
-                                new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});
-                listView2.setAdapter(simpleAdapter);
-            }
+        //短按打电话监听
+        listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onDataFailed() {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                final TextView name = (TextView) arg1.findViewById(R.id.name);
+                final TextView phone = (TextView) arg1.findViewById(R.id.number);
+                final TextView rank = (TextView) arg1.findViewById(R.id.rank);
+                //添加数据到数据库最近联系人
+                insert2(name.getText().toString(), phone.getText().toString(), 2 + "", rank.getText().toString());
+                Intent dialIntent = new Intent(Intent.ACTION_CALL, Uri
+                        .parse("tel:" + phone.getText().toString()));
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                startActivity(dialIntent);
 
             }
         });
+
+
+
+        initDatas();
+    }
+    /**
+     * 插入数据到最近联系人
+     * @param name
+     * @param phone
+     */
+    private void insert2(String name,String phone,String pid,String rank){
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String date = sDateFormat.format(new java.util.Date());
+        SQLiteDatabase db = dbh.getWritableDatabase();
+        ContentValues cv = new ContentValues();//实例化一个cv 用来装数据
+        cv.put("name", name);
+        cv.put("phone", phone);
+        cv.put("pid",pid);
+        cv.put("rank", rank);
+        cv.put("date", date);
+        db.insert("content1", null, cv);//插入操作
+        db.close();
+
+    }
+
+    private void initAllQuery(){
+        spUtil = new SpUtil();
+        peos=spUtil.getInfo(getActivity(), "huancun" + 0);
+        peos2=spUtil.getInfo(getActivity(), "huancun" + 0);
+        if (peos.size()>1){
+            Log.i("xml", " 本地查询成功====peos数据：" + peos.toString());
+            Log.i("xml", " 本地查询成功====peos数据：" + peos.size()+"条");
+            simpleAdapter = new SimpleAdapter
+                    (getActivity(), peos, R.layout.list_contact_item,
+                            new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});
+            listView2.setAdapter(simpleAdapter);
+
+        }else if (peos.size()<=1){
+            PraserPeoXML qData2 = new PraserPeoXML(0);
+            qData2.execute();
+            qData2.setOnDataFinishedListener(new OnDataFinishedListener() {
+                @Override
+                public void onDataSuccessfully(Object data) {
+                    //缓存数据，用sp保存
+                    List<Map<String, Object>> huancunpeos1 = new ArrayList<Map<String, Object>>();
+                    List<Map<String, Object>> huancunpeos2 = new ArrayList<Map<String, Object>>();
+                    huancunpeos1 =(List<Map<String, Object>>) data;
+                    huancunpeos2 =(List<Map<String, Object>>) data;
+                    spUtil.saveInfo(getActivity(), "huancun" + 0, huancunpeos1);
+                    spUtil.saveInfo(getActivity(), "huancun" + 0, huancunpeos2);
+
+
+                    peos = (List<Map<String, Object>>) data;
+                    peos2 = (List<Map<String, Object>>) data;
+                    Log.i("xml", " 联网异步查询成功====peos数据：" + peos.toString());
+                    simpleAdapter = new SimpleAdapter
+                            (getActivity(), peos, R.layout.list_contact_item,
+                                    new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});
+                    listView2.setAdapter(simpleAdapter);
+                }
+
+                @Override
+                public void onDataFailed() {
+
+                }
+            });
+
+        }
+
+
 
     }
 
