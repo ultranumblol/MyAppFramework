@@ -166,16 +166,28 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camara) {
-            startActivity(new Intent(MainActivity.this,MessageActivity.class));
+            Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+            intent.putExtra("title","公司简介");
+            startActivity(intent);
+
 
         } else if (id == R.id.nav_gallery) {
-            startActivity(new Intent(MainActivity.this,MessageActivity.class));
+            Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+            intent.putExtra("title","企业精神");
+            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-            startActivity(new Intent(MainActivity.this,MessageActivity.class));
+            Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+            intent.putExtra("title","关于本产品");
+            startActivity(intent);
         } else if (id == R.id.nav_manage) {
-            startActivity(new Intent(MainActivity.this,MessageActivity.class));
+            Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+            intent.putExtra("title","关于作者");
+
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
-            startActivity(new Intent(MainActivity.this,MessageActivity.class));
+            Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+            intent.putExtra("title","意见反馈");
+            startActivity(intent);
         } else if (id == R.id.nav_send) {
             Snackbar.make(rootlayout, "确认注销账号？", Snackbar.LENGTH_LONG)
                     .setAction("注销", new View.OnClickListener() {
@@ -197,10 +209,11 @@ public class MainActivity extends AppCompatActivity
                             }
                         }
                     }).show();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
     /**
