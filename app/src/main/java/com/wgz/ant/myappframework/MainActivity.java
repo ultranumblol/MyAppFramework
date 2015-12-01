@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
     }
         private void init(){
             rootlayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
-            tabLayout = (TabLayout) findViewById(R.id.tabs);
+           // tabLayout = (TabLayout) findViewById(R.id.tabs);
             List<String> titles = new ArrayList<>();
             titles.add("组织机构");
             titles.add("联系人");
@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity
             fragment1 = new Fragment1();
             fragment2 = new Fragment2();
 
-            tabLayout.addTab(tabLayout.newTab().setText(titles.get(0)));
-            tabLayout.addTab(tabLayout.newTab().setText(titles.get(1)));
+           // tabLayout.addTab(tabLayout.newTab().setText(titles.get(0)));
+           // tabLayout.addTab(tabLayout.newTab().setText(titles.get(1)));
 
             fragments = new ArrayList<>();
             fragments.add(fragment1);
@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity
             FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), fragments, titles);
 
             mViewpager.setAdapter(adapter);
-            tabLayout.setupWithViewPager(mViewpager);
-            tabLayout.setTabsFromPagerAdapter(adapter);
+           // tabLayout.setupWithViewPager(mViewpager);
+           // tabLayout.setTabsFromPagerAdapter(adapter);
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -141,27 +141,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Snackbar.make(rootlayout, "确认注销？", Snackbar.LENGTH_LONG)
-                    .setAction("注销", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            File file= new File("/data/data/"+MainActivity.this.getPackageName().toString()+"/shared_prefs","autologin.xml");
-                            if(file.exists()){
-                                file.delete();
-                                SharedPreferences sp = getSharedPreferences("autologin", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.clear().commit();
-                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                                Toast.makeText(getApplicationContext(),"注销成功！",Toast.LENGTH_SHORT).show();
-
-                                // Snackbar.make(rootlayout,"同步成功！",Snackbar.LENGTH_SHORT).setAction("同步", null).show();
-                            }else{
-                                Toast.makeText(getApplicationContext(),"注销成功！",Toast.LENGTH_SHORT).show();
-
-                            }
-                        }
-                    }).show();
-
+            startActivityForResult(new Intent(MainActivity.this, GroupManagerActivity.class), 0);
             return true;
         }
        /* if (id == R.id.action_add) {
@@ -186,17 +166,37 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camara) {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            startActivity(new Intent(MainActivity.this,MessageActivity.class));
+
         } else if (id == R.id.nav_gallery) {
-
+            startActivity(new Intent(MainActivity.this,MessageActivity.class));
         } else if (id == R.id.nav_slideshow) {
-
+            startActivity(new Intent(MainActivity.this,MessageActivity.class));
         } else if (id == R.id.nav_manage) {
-
+            startActivity(new Intent(MainActivity.this,MessageActivity.class));
         } else if (id == R.id.nav_share) {
-
+            startActivity(new Intent(MainActivity.this,MessageActivity.class));
         } else if (id == R.id.nav_send) {
+            Snackbar.make(rootlayout, "确认注销账号？", Snackbar.LENGTH_LONG)
+                    .setAction("注销", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            File file= new File("/data/data/"+MainActivity.this.getPackageName().toString()+"/shared_prefs","autologin.xml");
+                            if(file.exists()){
+                                file.delete();
+                                SharedPreferences sp = getSharedPreferences("autologin", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.clear().commit();
+                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                Toast.makeText(getApplicationContext(),"注销成功！",Toast.LENGTH_SHORT).show();
 
+                                // Snackbar.make(rootlayout,"同步成功！",Snackbar.LENGTH_SHORT).setAction("同步", null).show();
+                            }else{
+                                Toast.makeText(getApplicationContext(),"注销成功！",Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    }).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -213,8 +213,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String result = data.getExtras().getString("result");
-        //Log.i("xml", result + "111111111111111111111");
-        //Log.i("xml", fragmentList.get(1).getId() + "ididididididididi");
         Fragment f = getSupportFragmentManager().findFragmentById(fragments.get(1).getId());
         f.onActivityResult(requestCode, resultCode, data);
     }

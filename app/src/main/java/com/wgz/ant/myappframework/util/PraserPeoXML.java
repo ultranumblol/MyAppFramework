@@ -42,19 +42,20 @@ public class PraserPeoXML extends AsyncTask<android.R.integer, android.R.integer
         try {
             mpeoples=pParser.parse(is);
             for(People peoples:mpeoples){
-
-                Map<String, Object> map = new HashMap<String, Object>();
-                if (peoples.getPhone()==null) {
-                    map.put("phone", "---");
+                if (peoples.getName()!=null){
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    if (peoples.getPhone()==null) {
+                        map.put("phone", "---");
+                    }
+                    if (peoples.getPhone()!=null) {
+                        map.put("phone", peoples.getPhone());
+                    }
+                    map.put("id", peoples.getId());
+                    map.put("sid", peoples.getSid());
+                    map.put("name", peoples.getName());
+                    map.put("ranke",peoples.getRank());
+                    peos.add(map);
                 }
-                if (peoples.getPhone()!=null) {
-                    map.put("phone", peoples.getPhone());
-                }
-                map.put("id", peoples.getId());
-                map.put("sid", peoples.getSid());
-                map.put("name", peoples.getName());
-                map.put("ranke",peoples.getRank());
-                peos.add(map);
             }
 
         } catch (Exception e) {

@@ -1,11 +1,15 @@
 package com.wgz.ant.myappframework.fragment;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,13 +46,83 @@ public class Fragment2 extends Fragment {
         return  view;
     }
 
-    private void initview(View view) {
+    private void initview(final View view) {
         expandableListView_one = (ExpandableListView) view.findViewById(R.id.expandableListView);
         expandableListView_one.setGroupIndicator(null);//设置展开状况图标
         dbh = new DatabaseHelper(view.getContext());
         initdata();
+        expandableListView_one.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, final View v, int groupPosition, int childPosition, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                final TextView phone = (TextView) v.findViewById(R.id.textChild2);
+                final TextView pid = (TextView) v.findViewById(R.id.child_pid);
+                final TextView idd = (TextView) v.findViewById(R.id.child_id);
+                builder.setTitle("请选择");
+                //指定下拉列表的显示数据
+
+                final String[] types = {"拨打电话", "发送短信", "删除联系人"};
+                builder.setItems(types, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String select = types[which];
+                        if (select.equals("拨打电话")) {
+
+                            Intent dialIntent = new Intent(Intent.ACTION_CALL, Uri
+                                    .parse("tel:" + phone.getText().toString()));
+                            startActivity(dialIntent);
+                        }
+
+                        if (select.equals("发送短信")) {
+                            String num = phone.getText().toString();
+                            Uri smsToUri = Uri.parse("smsto:" + num);
+
+                            Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
+
+                            intent.putExtra("sms_body", "");
+
+                            startActivity(intent);
+                        }
+
+                        if (select.equals("删除联系人")) {
+                            //Toast.makeText(getActivity(), "删除成功!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(view, "删除成功！", Snackbar.LENGTH_SHORT).show();
+                            deletecontent(idd.getText().toString());
+                            flush();
+
+                            expandableListView_one.expandGroup(Integer.parseInt(pid.getText().toString()) - 1);
+
+
+                        }
+
+
+                    }
+                });
+                builder.show();
+
+               /* final TextView phone = (TextView) v.findViewById(R.id.textChild2);
+                Intent dialIntent = new Intent(Intent.ACTION_CALL, Uri
+                        .parse("tel:" + phone.getText().toString()));
+                startActivity(dialIntent);
+                return false;*/
+                return false;
+            }
+
+        });
     }
 
+    //删除联系人操作
+    private void deletecontent(String id){
+        SQLiteDatabase db = dbh.getWritableDatabase();
+        String sql2 ="delete from content1 where id =?";
+        String[] bindArgs = new String[]{id};
+        db.execSQL(sql2, bindArgs);
+        sql2= null;
+        // db.delete("content1","pid=? and phone=?",new String[]{pid,phone});
+        db.close();
+
+    }
     /**
      * 刷新方法
      */

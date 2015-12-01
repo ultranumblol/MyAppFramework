@@ -8,31 +8,21 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    android:id="@+id/contant_rootview"
+    android:id="@+id/gmana_rootview"
     tools:context="com.wgz.ant.myappframework.ContantActivity">
-
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:layout_marginTop="10dip"
-        >
+        android:layout_height="match_parent" />
 
-        <com.wgz.ant.myappframework.view.ScrollListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:dividerHeight="1px"
-            android:id="@+id/list_1"
-
-
-            android:divider="@color/colorPrimaryDark"
-            ></com.wgz.ant.myappframework.view.ScrollListView>
-    </android.support.v4.widget.NestedScrollView>
-    <android.support.design.widget.FloatingActionButton android:id="@+id/fab2"
+    <android.support.design.widget.FloatingActionButton android:id="@+id/fab3"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_gravity="bottom|end" android:layout_margin="5dp"
         android:src="@drawable/icon_title_back"
 
 
         />
+
+
 </android.support.design.widget.CoordinatorLayout>

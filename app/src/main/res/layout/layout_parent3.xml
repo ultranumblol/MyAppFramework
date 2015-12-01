@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/dialog_gname"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:paddingLeft="20px"
+        android:paddingTop="15px"
+        android:paddingBottom="15px"
+        android:textSize="18sp"
+        android:text="No data"
+        android:layout_marginLeft="8dip"
+        android:textColor="@color/black"
+        ></TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="parent"
+        
+        android:id="@+id/dialog_pid"/>
+</LinearLayout>

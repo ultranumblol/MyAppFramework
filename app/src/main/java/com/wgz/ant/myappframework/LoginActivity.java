@@ -260,7 +260,7 @@ public class LoginActivity extends AppCompatActivity  {
             // TODO: attempt authentication against a network service.
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1500);
 
             } catch (InterruptedException e) {
                 return false;

@@ -23,6 +23,7 @@ import com.wgz.ant.myappframework.bean.FileBean;
 import com.wgz.ant.myappframework.bean.Node;
 import com.wgz.ant.myappframework.util.OnDataFinishedListener;
 import com.wgz.ant.myappframework.util.PraserConXML;
+import com.wgz.ant.myappframework.util.PraserPeoXML;
 import com.wgz.ant.myappframework.util.SpUtil;
 
 import java.util.ArrayList;
@@ -39,8 +40,10 @@ public class Fragment1 extends Fragment {
     private EditText etSearch2;
     private TreeListViewAdapter mAdapter;
     private NestedScrollView reboundScrollView,reboundScrollView2;
-
+    private List<Map<String, Object>> peos;//联系人列表
+    private List<Map<String, Object>> peos2;
     private ListView mTree,listView2;
+    SimpleAdapter simpleAdapter;
     private List<Map<String, Object>> constest;
     SpUtil spUtil;
 
@@ -59,9 +62,10 @@ public class Fragment1 extends Fragment {
         listView2 = (ListView) view.findViewById(R.id.list_1_2);
         ivDeleteText2 = (ImageView)view.findViewById(R.id.ivDeleteText2);
         etSearch2 = (EditText)view.findViewById(R.id.etSearch2);
+        initAllQuery();
         //搜索功能
-        listView2.setAdapter(new SimpleAdapter(getActivity(),testData(),R.layout.list_contact_item,
-                new String[]{"name", "phone"}, new int[]{R.id.name, R.id.number}));
+//        listView2.setAdapter(new SimpleAdapter(getActivity(),testData(),R.layout.list_contact_item,
+//                new String[]{"name", "phone"}, new int[]{R.id.name, R.id.number}));
         //文字删除监听
         ivDeleteText2.setOnClickListener(new View.OnClickListener() {
 
@@ -93,13 +97,45 @@ public class Fragment1 extends Fragment {
                     reboundScrollView.setVisibility(View.GONE);
                     reboundScrollView2.setVisibility(View.VISIBLE);
                 }
-                //search1();
+                search1();
 
 
             }
         });
         initDatas();
     }
+    private void initAllQuery(){
+        PraserPeoXML qData2 = new PraserPeoXML(0);
+        qData2.execute();
+        qData2.setOnDataFinishedListener(new OnDataFinishedListener() {
+            @Override
+            public void onDataSuccessfully(Object data) {
+                //缓存数据，用sp保存
+                List<Map<String, Object>> huancunpeos1 = new ArrayList<Map<String, Object>>();
+                List<Map<String, Object>> huancunpeos2 = new ArrayList<Map<String, Object>>();
+                huancunpeos1 =(List<Map<String, Object>>) data;
+                huancunpeos2 =(List<Map<String, Object>>) data;
+                spUtil.saveInfo(getActivity(), "huancun" + 0, huancunpeos1);
+                spUtil.saveInfo(getActivity(), "huancun" + 0, huancunpeos2);
+
+
+                peos = (List<Map<String, Object>>) data;
+                peos2 = (List<Map<String, Object>>) data;
+                Log.i("xml", " 联网异步查询成功====peos数据：" + peos.toString());
+                simpleAdapter = new SimpleAdapter
+                        (getActivity(), peos, R.layout.list_contact_item,
+                                new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});
+                listView2.setAdapter(simpleAdapter);
+            }
+
+            @Override
+            public void onDataFailed() {
+
+            }
+        });
+
+    }
+
     //初始化数据
     private  void initDatas(){
          spUtil = new SpUtil();
@@ -215,20 +251,37 @@ public class Fragment1 extends Fragment {
     private void search1(){
         String input = etSearch2.getText().toString();
         //Log.i("xml","search方法： constest有："+constest.toString());
-        //getmDataSub(peos2, input);//获取更新数据
+        getmDataSub(peos2, input);//获取更新数据
     }
-    private List<Map<String, Object>> testData(){
-        List<Map<String,Object>> data = new ArrayList<Map<String, Object>>();
-        for (int i = 0 ; i <20 ; i++){
-            Map<String, Object> map = new HashMap<String, Object>();
-            map . put("name", "ceshi"+i);
-            map. put("phone", "qqqq" + i + i);
-            data.add(map);
+    /**
+     * 更新data数据
+     * @param constest
+     * @param data
+     */
+    private void getmDataSub(List<Map<String, Object>> constest,String data)
+    {
 
+        ArrayList<Map<String, Object>> data2 = new ArrayList<Map<String, Object>>();
+        data2.clear();
+        int length = constest.size();
+        //Log.i("xml","进去getmDataSub方法时peos2的长度为"+length);
+        for(int i = 0; i < length; i++){
 
+            if (constest.get(i).get("phone").toString().contains(data)||
+                    constest.get(i).get("name").toString().contains(data)) {
+                Map<String,Object> item = new HashMap<String,Object>();
+                item.put("name",peos2.get(i).get("name").toString());
+                item.put("phone", peos2.get(i).get("phone").toString());
+                item.put("ranke", peos2.get(i).get("ranke").toString());
+                data2.add(item);
+                //Log.i("xml","getmDataSub方法的循环后peos2：："+constest.get(i).get("phone").toString());
+            }
         }
-
-        return data;
+        //Log.i("xml","getmDataSub方法后peos"+constest.toString());
+        //更新
+        simpleAdapter =new SimpleAdapter(getActivity(), data2, R.layout.list_contact_item,
+                new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});
+        listView2.setAdapter(simpleAdapter);
 
     }
 
