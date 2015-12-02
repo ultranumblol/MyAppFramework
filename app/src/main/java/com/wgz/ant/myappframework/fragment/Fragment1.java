@@ -54,7 +54,7 @@ public class Fragment1 extends Fragment {
     private TreeListViewAdapter mAdapter;
     private NestedScrollView reboundScrollView,reboundScrollView2;
     private List<Map<String, Object>> peos;//联系人列表
-    //private List<Map<String, Object>> peos2;
+    private List<Map<String, Object>> peos2;
     private ListView mTree,listView2;
     SimpleAdapter simpleAdapter;
     private List<Map<String, Object>> constest;
@@ -111,7 +111,10 @@ public class Fragment1 extends Fragment {
                     reboundScrollView.setVisibility(View.GONE);
                     reboundScrollView2.setVisibility(View.VISIBLE);
                 }
-                search1();
+                SearchTask searchTask = new SearchTask();
+                searchTask.execute();
+
+                //search1();
 
 
             }
@@ -324,17 +327,19 @@ public class Fragment1 extends Fragment {
         }
 
     }
-    private void search1(){
+    private List<Map<String, Object>> search1(){
         String input = etSearch2.getText().toString();
         //Log.i("xml","search方法： constest有："+constest.toString());
-        getmDataSub(peos, input);//获取更新数据
+        peos2=getmDataSub(peos, input);//获取更新数据
+        return peos2;
+
     }
     /**
      * 更新data数据
      * @param constest
      * @param data
      */
-    private void getmDataSub(List<Map<String, Object>> constest,String data)
+    private ArrayList<Map<String, Object>> getmDataSub(List<Map<String, Object>> constest, String data)
     {
 
         ArrayList<Map<String, Object>> data2 = new ArrayList<Map<String, Object>>();
@@ -354,8 +359,9 @@ public class Fragment1 extends Fragment {
         }
         //Log.i("xml","getmDataSub方法后peos"+constest.toString());
         //更新
-        adapter = new MyListAdapter(data2,getActivity());
-        listView2.setAdapter(adapter);
+        return data2;
+       /* adapter = new MyListAdapter(data2,getActivity());
+        listView2.setAdapter(adapter);*/
     }
 
     public class SearchTask extends AsyncTask{
@@ -364,15 +370,17 @@ public class Fragment1 extends Fragment {
 
         @Override
         protected Object doInBackground(Object[] params) {
-            search1();
-            return null;
+            List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+            list =search1();
+            return list;
         }
 
         @Override
         protected void onPostExecute(Object o) {
+            peos2 = (List<Map<String, Object>>) o;
+            adapter = new MyListAdapter(peos2,getActivity());
+            listView2.setAdapter(adapter);
 
-
-            super.onPostExecute(o);
         }
     }
 
