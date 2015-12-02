@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -53,7 +54,7 @@ public class Fragment1 extends Fragment {
     private TreeListViewAdapter mAdapter;
     private NestedScrollView reboundScrollView,reboundScrollView2;
     private List<Map<String, Object>> peos;//联系人列表
-    private List<Map<String, Object>> peos2;
+    //private List<Map<String, Object>> peos2;
     private ListView mTree,listView2;
     SimpleAdapter simpleAdapter;
     private List<Map<String, Object>> constest;
@@ -170,17 +171,12 @@ public class Fragment1 extends Fragment {
     private void initAllQuery(){
         spUtil = new SpUtil();
         peos=spUtil.getInfo(getActivity(), "huancun" + 0);
-        peos2=spUtil.getInfo(getActivity(), "huancun" + 0);
+        //peos2=spUtil.getInfo(getActivity(), "huancun" + 0);
         if (peos.size()>1){
             Log.i("xml", " 本地查询成功====peos数据：" + peos.toString());
             Log.i("xml", " 本地查询成功====peos数据：" + peos.size()+"条");
-            adapter = new MyListAdapter(peos,getActivity());
-
-
-            /*simpleAdapter = new SimpleAdapter
-                    (getActivity(), peos, R.layout.list_contact_item,
-                            new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});*/
-            listView2.setAdapter(adapter);
+           // adapter = new MyListAdapter(peos,getActivity());
+           // listView2.setAdapter(adapter);
 
         }else if (peos.size()<=1){
             PraserPeoXML qData2 = new PraserPeoXML(0);
@@ -198,15 +194,10 @@ public class Fragment1 extends Fragment {
 
 
                     peos = (List<Map<String, Object>>) data;
-                    peos2 = (List<Map<String, Object>>) data;
+                   // peos2 = (List<Map<String, Object>>) data;
                     Log.i("xml", " 联网异步查询成功====peos数据：" + peos.toString());
-                    adapter = new MyListAdapter(peos,getActivity());
-
-
-            /*simpleAdapter = new SimpleAdapter
-                    (getActivity(), peos, R.layout.list_contact_item,
-                            new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});*/
-                    listView2.setAdapter(adapter);
+                   // adapter = new MyListAdapter(peos,getActivity());
+                    //listView2.setAdapter(adapter);
                 }
 
                 @Override
@@ -336,7 +327,7 @@ public class Fragment1 extends Fragment {
     private void search1(){
         String input = etSearch2.getText().toString();
         //Log.i("xml","search方法： constest有："+constest.toString());
-        getmDataSub(peos2, input);//获取更新数据
+        getmDataSub(peos, input);//获取更新数据
     }
     /**
      * 更新data数据
@@ -349,28 +340,40 @@ public class Fragment1 extends Fragment {
         ArrayList<Map<String, Object>> data2 = new ArrayList<Map<String, Object>>();
         data2.clear();
         int length = constest.size();
-        //Log.i("xml","进去getmDataSub方法时peos2的长度为"+length);
+
         for(int i = 0; i < length; i++){
 
             if (constest.get(i).get("phone").toString().contains(data)||
                     constest.get(i).get("name").toString().contains(data)) {
                 Map<String,Object> item = new HashMap<String,Object>();
-                item.put("name",peos2.get(i).get("name").toString());
-                item.put("phone", peos2.get(i).get("phone").toString());
-                item.put("ranke", peos2.get(i).get("ranke").toString());
+                item.put("name",peos.get(i).get("name").toString());
+                item.put("phone", peos.get(i).get("phone").toString());
+                item.put("ranke", peos.get(i).get("ranke").toString());
                 data2.add(item);
-                //Log.i("xml","getmDataSub方法的循环后peos2：："+constest.get(i).get("phone").toString());
             }
         }
         //Log.i("xml","getmDataSub方法后peos"+constest.toString());
         //更新
         adapter = new MyListAdapter(data2,getActivity());
-
-
-            /*simpleAdapter = new SimpleAdapter
-                    (getActivity(), peos, R.layout.list_contact_item,
-                            new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});*/
         listView2.setAdapter(adapter);
+    }
+
+    public class SearchTask extends AsyncTask{
+        public SearchTask() {
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            search1();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+
+
+            super.onPostExecute(o);
+        }
     }
 
 }
