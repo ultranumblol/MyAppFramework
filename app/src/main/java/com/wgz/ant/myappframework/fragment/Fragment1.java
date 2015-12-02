@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.wgz.ant.myappframework.ContantActivity;
 import com.wgz.ant.myappframework.R;
+import com.wgz.ant.myappframework.adapter.MyListAdapter;
 import com.wgz.ant.myappframework.adapter.SimpleTreeAdapter;
 import com.wgz.ant.myappframework.adapter.TreeListViewAdapter;
 import com.wgz.ant.myappframework.bean.FileBean;
@@ -57,7 +58,7 @@ public class Fragment1 extends Fragment {
     SimpleAdapter simpleAdapter;
     private List<Map<String, Object>> constest;
     SpUtil spUtil;
-
+    MyListAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1,null);
@@ -173,10 +174,13 @@ public class Fragment1 extends Fragment {
         if (peos.size()>1){
             Log.i("xml", " 本地查询成功====peos数据：" + peos.toString());
             Log.i("xml", " 本地查询成功====peos数据：" + peos.size()+"条");
-            simpleAdapter = new SimpleAdapter
+            adapter = new MyListAdapter(peos,getActivity());
+
+
+            /*simpleAdapter = new SimpleAdapter
                     (getActivity(), peos, R.layout.list_contact_item,
-                            new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});
-            listView2.setAdapter(simpleAdapter);
+                            new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});*/
+            listView2.setAdapter(adapter);
 
         }else if (peos.size()<=1){
             PraserPeoXML qData2 = new PraserPeoXML(0);
@@ -196,10 +200,13 @@ public class Fragment1 extends Fragment {
                     peos = (List<Map<String, Object>>) data;
                     peos2 = (List<Map<String, Object>>) data;
                     Log.i("xml", " 联网异步查询成功====peos数据：" + peos.toString());
-                    simpleAdapter = new SimpleAdapter
-                            (getActivity(), peos, R.layout.list_contact_item,
-                                    new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});
-                    listView2.setAdapter(simpleAdapter);
+                    adapter = new MyListAdapter(peos,getActivity());
+
+
+            /*simpleAdapter = new SimpleAdapter
+                    (getActivity(), peos, R.layout.list_contact_item,
+                            new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});*/
+                    listView2.setAdapter(adapter);
                 }
 
                 @Override
@@ -357,10 +364,13 @@ public class Fragment1 extends Fragment {
         }
         //Log.i("xml","getmDataSub方法后peos"+constest.toString());
         //更新
-        simpleAdapter =new SimpleAdapter(getActivity(), data2, R.layout.list_contact_item,
-                new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});
-        listView2.setAdapter(simpleAdapter);
+        adapter = new MyListAdapter(data2,getActivity());
 
+
+            /*simpleAdapter = new SimpleAdapter
+                    (getActivity(), peos, R.layout.list_contact_item,
+                            new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});*/
+        listView2.setAdapter(adapter);
     }
 
 }
