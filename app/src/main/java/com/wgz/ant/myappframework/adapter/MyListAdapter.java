@@ -28,7 +28,12 @@ public class MyListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.size();
+        if (data.size()<30){
+            return data.size();
+
+        }else{
+            return 30;
+        }
     }
 
     @Override

@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity  {
 
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
-       setTitle("请登陆");
+        setTitle("请登陆");
         autologin = (CheckBox) findViewById(R.id.autologin);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -161,31 +161,31 @@ public class LoginActivity extends AppCompatActivity  {
                 if (autologin.isChecked()) {
                     savesp();
                 }
-                    // Check for a valid password, if the user entered one.
-                    if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-                        mPasswordView.setError(getString(R.string.error_invalid_password));
-                        focusView[0] = mPasswordView;
-                        cancel[0] = true;
-                    }
+                // Check for a valid password, if the user entered one.
+                if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+                    mPasswordView.setError(getString(R.string.error_invalid_password));
+                    focusView[0] = mPasswordView;
+                    cancel[0] = true;
+                }
 
-                    // Check for a valid email address.
-                    if (TextUtils.isEmpty(email)) {
-                        mEmailView.setError(getString(R.string.error_field_required));
-                        focusView[0] = mEmailView;
-                        cancel[0] = true;
-                    }
+                // Check for a valid email address.
+                if (TextUtils.isEmpty(email)) {
+                    mEmailView.setError(getString(R.string.error_field_required));
+                    focusView[0] = mEmailView;
+                    cancel[0] = true;
+                }
 
-                    if (cancel[0]) {
-                        // There was an error; don't attempt login and focus the first
-                        // form field with an error.
-                        focusView[0].requestFocus();
-                    } else {
-                        // Show a progress spinner, and kick off a background task to
-                        // perform the user login attempt.
-                        showProgress(true);
-                        mAuthTask = new UserLoginTask(email, password);
-                        mAuthTask.execute((Void) null);
-                    }
+                if (cancel[0]) {
+                    // There was an error; don't attempt login and focus the first
+                    // form field with an error.
+                    focusView[0].requestFocus();
+                } else {
+                    // Show a progress spinner, and kick off a background task to
+                    // perform the user login attempt.
+                    showProgress(true);
+                    mAuthTask = new UserLoginTask(email, password);
+                    mAuthTask.execute((Void) null);
+                }
 
             }
 
@@ -277,6 +277,8 @@ public class LoginActivity extends AppCompatActivity  {
             showProgress(false);
 
             if (success) {
+
+                savename(mEmail);
                 finish();
                 Toast.makeText(LoginActivity.this,"登录成功！",Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -299,6 +301,15 @@ public class LoginActivity extends AppCompatActivity  {
         SharedPreferences.Editor editor  = preferences.edit();
         editor.putString("autologin","true");
         editor.commit();
+
+    }
+    //保存登陆号码
+    private void savename(String phone){
+        SharedPreferences preferences = getSharedPreferences("userphone", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor  = preferences.edit();
+        editor.putString("userphone",phone);
+        editor.commit();
+
 
     }
     private String getsp(){

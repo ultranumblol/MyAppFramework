@@ -213,7 +213,7 @@ public class Fragment2 extends Fragment {
 
             }
         }
-        Log.i("xml", "data的长度：=================" + data.size());
+        Log.i("xml", "联系人分组数目：=================" + data.size());
         db.close();
         return data;
     };
@@ -245,7 +245,7 @@ public class Fragment2 extends Fragment {
             }
         }
         //Log.i("xml","diyicichaxun======"+data.size());
-        Log.i("xml","diyicichaxun======"+data.toString());
+        //Log.i("xml","diyicichaxun======"+data.toString());
         db.close();
         return data;
     };

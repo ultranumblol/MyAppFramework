@@ -25,8 +25,6 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.wgz.ant.myappframework.db.DatabaseHelper;
-import com.wgz.ant.myappframework.util.OnDataFinishedListener;
-import com.wgz.ant.myappframework.util.PraserPeoXML;
 import com.wgz.ant.myappframework.util.SpUtil;
 
 import java.text.SimpleDateFormat;
@@ -38,7 +36,7 @@ import java.util.Map;
 public class ContantActivity extends AppCompatActivity {
     DatabaseHelper dbh;
     private List<Map<String, Object>> peos;//联系人列表
-    private List<Map<String, Object>> peos2;
+    //private List<Map<String, Object>> peos2;
     SimpleAdapter simpleAdapter;
     SpUtil spUtil;
     CoordinatorLayout mcdlayout;
@@ -124,7 +122,7 @@ public class ContantActivity extends AppCompatActivity {
 
     }
     /**
-     * 添加单个联系人
+     * 添加单个联系人到手机通讯录
      * @param name
      * @param phoneNum
      */
@@ -319,7 +317,32 @@ public class ContantActivity extends AppCompatActivity {
     private void initdb() {
         dbh = new DatabaseHelper(this);
     }
+    /**
+     * 更新data数据
+     * @param constest
+     * @param sid
+     */
+    private ArrayList<Map<String, Object>> getmDataSub(List<Map<String, Object>> constest, String sid)
+    {
 
+        ArrayList<Map<String, Object>> data2 = new ArrayList<Map<String, Object>>();
+        data2.clear();
+        int length = constest.size();
+
+        for(int i = 0; i < length; i++){
+
+            if (constest.get(i).get("sid").toString().equals(sid)) {
+                Map<String,Object> item = new HashMap<String,Object>();
+                item.put("name",constest.get(i).get("name").toString());
+                item.put("phone", constest.get(i).get("phone").toString());
+                item.put("ranke", constest.get(i).get("ranke").toString());
+                data2.add(item);
+            }
+        }
+        //Log.i("xml","getmDataSub方法后peos"+constest.toString());
+        //更新
+        return data2;
+    }
     //初始化查询方法
     private void initquery(){
 
@@ -330,17 +353,21 @@ public class ContantActivity extends AppCompatActivity {
         String title = intent.getStringExtra("title");
         setTitle(title);
 
-        peos=spUtil.getInfo(getApplicationContext(), "huancun" + sid);
-        peos2=spUtil.getInfo(getApplicationContext(), "huancun" + sid);
+        peos=spUtil.getInfo(getApplicationContext(), "huancun" + 0);
+        //peos2=spUtil.getInfo(getApplicationContext(), "huancun" + 0);
         if (peos.size()>1){
-            Log.i("xml", " 本地查询成功====peos数据：" + peos.toString());
-            Log.i("xml", " 本地查询成功====peos数据：" + peos.size()+"tiao");
+
+
+            List<Map<String , Object>> list3 = new ArrayList<Map<String ,Object>>();
+            list3 = getmDataSub(peos,sid+"");
+            //Log.i("xml", " 本地查询成功====peos数据：" + peos.toString());
+            Log.i("xml", " 本地查询成功====peos数据：" + peos.size()+"条");
             simpleAdapter = new SimpleAdapter
-                    (ContantActivity.this, peos, R.layout.list_contact_item,
+                    (ContantActivity.this, list3, R.layout.list_contact_item,
                             new String[]{"name", "phone", "ranke"}, new int[]{R.id.name, R.id.number, R.id.rank});
             list1.setAdapter(simpleAdapter);
 
-        }else if (peos.size()<=1){
+        }/*else if (peos.size()<=1){
                 //联网异步查询联系人
                 PraserPeoXML qData2 = new PraserPeoXML(sid);
                 qData2.execute();
@@ -377,7 +404,7 @@ public class ContantActivity extends AppCompatActivity {
 
 
 
-        }
+        }*/
 
     }
 }

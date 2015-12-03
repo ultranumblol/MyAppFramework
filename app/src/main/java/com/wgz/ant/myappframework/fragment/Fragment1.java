@@ -2,7 +2,9 @@ package com.wgz.ant.myappframework.fragment;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -21,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.wgz.ant.myappframework.ContantActivity;
@@ -56,7 +57,7 @@ public class Fragment1 extends Fragment {
     private List<Map<String, Object>> peos;//联系人列表
     private List<Map<String, Object>> peos2;
     private ListView mTree,listView2;
-    SimpleAdapter simpleAdapter;
+    private View mProgressView;
     private List<Map<String, Object>> constest;
     SpUtil spUtil;
     MyListAdapter adapter;
@@ -72,6 +73,7 @@ public class Fragment1 extends Fragment {
         dbh = new DatabaseHelper(getActivity());
         reboundScrollView = (NestedScrollView) view.findViewById(R.id.zuzhi_sv);
         reboundScrollView2 = (NestedScrollView) view.findViewById(R.id.zuzhi_sv2);
+        mProgressView = view.findViewById(R.id.frag1_progress);
         mTree = (ListView) view.findViewById(R.id.list_1_1);
         listView2 = (ListView) view.findViewById(R.id.list_1_2);
         ivDeleteText2 = (ImageView)view.findViewById(R.id.ivDeleteText2);
@@ -214,7 +216,6 @@ public class Fragment1 extends Fragment {
 
 
     }
-
     //初始化数据
     private  void initDatas(){
          spUtil = new SpUtil();
@@ -244,11 +245,7 @@ public class Fragment1 extends Fragment {
                         mDatas.add(new FileBean(id, pid, name, phone));
                     }
                     // id , pid , name ,dianhua
-				/*mDatas.add(new FileBean(1, 0, "name1","18811111111"));
-				mDatas.add(new FileBean(2, 1, "name1","18822222222"));
-				mDatas.add(new FileBean(3, 1, "name1","18833333333"));
-				 */
-                    Log.i("xml", " fragment6=======" + mDatas.size() + "tiao");
+                    Log.i("xml", " fragment1=======" + mDatas.size() + "条");
                     try {
                         mAdapter = new SimpleTreeAdapter<FileBean>(mTree, getActivity().getApplicationContext(), mDatas, 0);
 
@@ -285,7 +282,7 @@ public class Fragment1 extends Fragment {
 
         }
         else {
-            Log.i("xml", " fragment6=======缓存中的constest:"+constest.toString());
+            Log.i("xml", " fragment1=======缓存中的constest:"+constest.toString());
             for (int i = 0; i < constest.size(); i++) {
                 int id = Integer.parseInt(constest.get(i).get("id").toString()) ;
                 int pid =Integer.parseInt(constest.get(i).get("pid").toString()) ;
@@ -360,10 +357,31 @@ public class Fragment1 extends Fragment {
         //Log.i("xml","getmDataSub方法后peos"+constest.toString());
         //更新
         return data2;
-       /* adapter = new MyListAdapter(data2,getActivity());
-        listView2.setAdapter(adapter);*/
+    }
+//获得登陆用户信息
+    private ArrayList<Map<String, Object>> getuserinfo(List<Map<String, Object>> constest,String phone){
+        ArrayList<Map<String, Object>> data2 = new ArrayList<Map<String, Object>>();
+        data2.clear();
+        int length = constest.size();
+        for (int i = 0; i < length; i++){
+            if (constest.get(i).get("phone").toString().equals(phone)){
+                Map<String,Object> item = new HashMap<String,Object>();
+                item.put("name",peos.get(i).get("name").toString());
+                item.put("phone", peos.get(i).get("phone").toString());
+                item.put("ranke", peos.get(i).get("ranke").toString());
+                data2.add(item);
+            }
+
+        }
+        return data2;
     }
 
+
+    private String getphonesp(){
+        SharedPreferences preferences = getActivity().getSharedPreferences("userphone", Context.MODE_PRIVATE);
+        String userphone = preferences.getString("userphone", "--");
+        return userphone;
+    }
     public class SearchTask extends AsyncTask{
         public SearchTask() {
         }
@@ -380,6 +398,11 @@ public class Fragment1 extends Fragment {
             peos2 = (List<Map<String, Object>>) o;
             adapter = new MyListAdapter(peos2,getActivity());
             listView2.setAdapter(adapter);
+
+
+        }
+        @Override
+        protected void onCancelled() {
 
         }
     }
