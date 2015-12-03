@@ -288,19 +288,19 @@ public class MainActivity extends AppCompatActivity
                         public void onClick(View v) {
                             File file2= new File("/data/data/"+MainActivity.this.getPackageName().toString()+"/shared_prefs","userphone.xml");
                             if(file2.exists()){
+                                file2.delete();
                                 SharedPreferences sp2 = getSharedPreferences("userphone", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor2 = sp2.edit();
                                 editor2.clear().commit();
-                                file2.delete();
 
                             }
                             File file= new File("/data/data/"+MainActivity.this.getPackageName().toString()+"/shared_prefs","autologin.xml");
                             if(file.exists()){
+                                file.delete();
                                 SharedPreferences sp = getSharedPreferences("autologin", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.clear().commit();
-                                file.delete();
-
+                                MainActivity.this.finish();
                                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                                 Toast.makeText(getApplicationContext(), "注销成功！", Toast.LENGTH_SHORT).show();
 
