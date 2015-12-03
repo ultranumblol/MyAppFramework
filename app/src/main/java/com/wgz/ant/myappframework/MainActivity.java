@@ -27,6 +27,8 @@ import com.wgz.ant.myappframework.adapter.FragmentAdapter;
 import com.wgz.ant.myappframework.fragment.Fragment1;
 import com.wgz.ant.myappframework.fragment.Fragment2;
 import com.wgz.ant.myappframework.util.CheckNetWork;
+import com.wgz.ant.myappframework.util.OnDataFinishedListener;
+import com.wgz.ant.myappframework.util.PraserPeoXML;
 import com.wgz.ant.myappframework.util.SpUtil;
 
 import java.io.File;
@@ -43,7 +45,9 @@ public class MainActivity extends AppCompatActivity
     private List<Fragment> fragments;
     private TabLayout tabLayout;
     private List<Map<String, Object>> peos;//联系人列表
+    private List<Map<String , Object>> list3 ;
     SpUtil spUtil;
+    private TextView rank,name;
     private CoordinatorLayout rootlayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,14 @@ public class MainActivity extends AppCompatActivity
     }
         private void init(){
             rootlayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+            navigationView.getHeaderCount();
+            View view =  navigationView.getHeaderView(0);
+            TextView phone = (TextView)view.findViewById(R.id.head_phone);
+            phone.setText(getphonesp());
+            rank = (TextView) view.findViewById(R.id.head_rank);
+            name = (TextView) view.findViewById(R.id.head_name);
            // tabLayout = (TabLayout) findViewById(R.id.tabs);
             List<String> titles = new ArrayList<>();
             titles.add("组织机构");
@@ -95,9 +107,39 @@ public class MainActivity extends AppCompatActivity
                                 File file = new File("/data/data/" + MainActivity.this.getPackageName().toString() + "/shared_prefs", "finals.xml");
                                 if (file.exists()) {
                                     file.delete();
+                                    SharedPreferences sp = getSharedPreferences("finals", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    editor.clear().commit();
+
                                     Intent intent = MainActivity.this.getIntent();
                                     MainActivity.this.finish();
                                     startActivity(intent);
+                                   /* PraserPeoXML qData2 = new PraserPeoXML(0);
+                                    qData2.execute();
+                                    qData2.setOnDataFinishedListener(new OnDataFinishedListener() {
+                                        @Override
+                                        public void onDataSuccessfully(Object data) {
+                                            //缓存数据，用sp保存
+                                            List<Map<String, Object>> huancunpeos1 = new ArrayList<Map<String, Object>>();
+                                            // List<Map<String, Object>> huancunpeos2 = new ArrayList<Map<String, Object>>();
+                                            huancunpeos1 = (List<Map<String, Object>>) data;
+                                            // huancunpeos2 =(List<Map<String, Object>>) data;
+                                            spUtil.saveInfo(MainActivity.this, "huancun" + 0, huancunpeos1);
+                                            //spUtil.saveInfo(getActivity(), "huancun" + 0, huancunpeos2);
+
+
+                                            peos = (List<Map<String, Object>>) data;
+                                            // peos2 = (List<Map<String, Object>>) data;
+                                            Log.i("xml", " 同步结束====peos数据：" + peos.toString());
+                                            // adapter = new MyListAdapter(peos,getActivity());
+                                            //listView2.setAdapter(adapter);
+                                        }
+
+                                        @Override
+                                        public void onDataFailed() {
+
+                                        }
+                                    });*/
                                     Toast.makeText(getApplicationContext(), "同步成功！", Toast.LENGTH_SHORT).show();
                                     // Snackbar.make(rootlayout,"同步成功！",Snackbar.LENGTH_SHORT).setAction("同步", null).show();
                                 } else {
@@ -111,27 +153,18 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
+
+
+
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.setDrawerListener(toggle);
             toggle.syncState();
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-            navigationView.getHeaderCount();
-            View view =  navigationView.getHeaderView(0);
-            List<Map<String , Object>> list3 = new ArrayList<Map<String ,Object>>();
-            list3 = getuserinfo(peos,getphonesp());
-            Log.i("xml", "list3登陆用户信息====" + list3.toString());
-            //Log.i("xml", navigationView.getHeaderCount() + "============12222222222222222222222222");
-            TextView phone = (TextView)view.findViewById(R.id.head_phone);
-            TextView rank = (TextView) view.findViewById(R.id.head_rank);
-            TextView name = (TextView) view.findViewById(R.id.head_name);
-            phone.setText(getphonesp());
-            rank.setText(list3.get(0).get("ranke").toString());
-            name.setText(list3.get(0).get("name").toString());
-        }
+
+            }
+
 
     @Override
     public void onBackPressed() {
@@ -144,7 +177,43 @@ public class MainActivity extends AppCompatActivity
     }
     private void initAllQuery(){
         spUtil = new SpUtil();
+
         peos=spUtil.getInfo(MainActivity.this, "huancun" + 0);
+
+
+        Log.i("xml", " mainactivity==initAllQuery：" + peos.toString());
+        if (peos.size()<5){
+            PraserPeoXML qData2 = new PraserPeoXML(0);
+            qData2.execute();
+            qData2.setOnDataFinishedListener(new OnDataFinishedListener() {
+                @Override
+                public void onDataSuccessfully(Object data) {
+                    //缓存数据，用sp保存
+                    List<Map<String, Object>> huancunpeos1 = new ArrayList<Map<String, Object>>();
+                    huancunpeos1 = (List<Map<String, Object>>) data;
+                    spUtil.saveInfo(MainActivity.this, "huancun" + 0, huancunpeos1);
+                    peos = (List<Map<String, Object>>) data;
+                    Log.i("xml", " mainactivity联网异步查询成功====peos数据：" + peos.toString());
+                    list3 = new ArrayList<Map<String ,Object>>();
+                    list3 = getuserinfo(peos,getphonesp());
+                    Log.i("xml", "list3登陆用户信息====" + list3.toString());
+                    rank.setText(list3.get(0).get("ranke").toString());
+                    name.setText(list3.get(0).get("name").toString());
+                }
+
+                @Override
+                public void onDataFailed() {
+
+                }
+            });
+
+        }else{
+            list3 = new ArrayList<Map<String ,Object>>();
+            list3 = getuserinfo(peos,getphonesp());
+            Log.i("xml", "list3登陆用户信息====" + list3.toString());
+            rank.setText(list3.get(0).get("ranke").toString());
+            name.setText(list3.get(0).get("name").toString());
+        }
 
 
 

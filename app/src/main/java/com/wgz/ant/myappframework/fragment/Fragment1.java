@@ -2,9 +2,7 @@ package com.wgz.ant.myappframework.fragment;
 
 import android.Manifest;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -35,7 +33,6 @@ import com.wgz.ant.myappframework.bean.Node;
 import com.wgz.ant.myappframework.db.DatabaseHelper;
 import com.wgz.ant.myappframework.util.OnDataFinishedListener;
 import com.wgz.ant.myappframework.util.PraserConXML;
-import com.wgz.ant.myappframework.util.PraserPeoXML;
 import com.wgz.ant.myappframework.util.SpUtil;
 
 import java.text.SimpleDateFormat;
@@ -78,7 +75,7 @@ public class Fragment1 extends Fragment {
         listView2 = (ListView) view.findViewById(R.id.list_1_2);
         ivDeleteText2 = (ImageView)view.findViewById(R.id.ivDeleteText2);
         etSearch2 = (EditText)view.findViewById(R.id.etSearch2);
-        initAllQuery();
+
         //搜索功能
 //        listView2.setAdapter(new SimpleAdapter(getActivity(),testData(),R.layout.list_contact_item,
 //                new String[]{"name", "phone"}, new int[]{R.id.name, R.id.number}));
@@ -113,6 +110,8 @@ public class Fragment1 extends Fragment {
                     reboundScrollView.setVisibility(View.GONE);
                     reboundScrollView2.setVisibility(View.VISIBLE);
                 }
+
+                initAllQuery();
                 SearchTask searchTask = new SearchTask();
                 searchTask.execute();
 
@@ -150,7 +149,6 @@ public class Fragment1 extends Fragment {
         });
 
 
-
         initDatas();
     }
     /**
@@ -175,15 +173,15 @@ public class Fragment1 extends Fragment {
 
     private void initAllQuery(){
         spUtil = new SpUtil();
-        peos=spUtil.getInfo(getActivity(), "huancun" + 0);
+        peos = spUtil.getInfo(getActivity(), "huancun" + 0);
         //peos2=spUtil.getInfo(getActivity(), "huancun" + 0);
-        if (peos.size()>1){
-            Log.i("xml", " 本地查询成功====peos数据：" + peos.toString());
-            Log.i("xml", " 本地查询成功====peos数据：" + peos.size()+"条");
+        /*if (peos.size()>5){
+            Log.i("xml", " fragment1本地查询成功====peos数据：" + peos.toString());
+            Log.i("xml", " fragment1本地查询成功====peos数据：" + peos.size()+"条");
            // adapter = new MyListAdapter(peos,getActivity());
            // listView2.setAdapter(adapter);
 
-        }else if (peos.size()<=1){
+        }else if (peos.size()<5){
             PraserPeoXML qData2 = new PraserPeoXML(0);
             qData2.execute();
             qData2.setOnDataFinishedListener(new OnDataFinishedListener() {
@@ -191,16 +189,17 @@ public class Fragment1 extends Fragment {
                 public void onDataSuccessfully(Object data) {
                     //缓存数据，用sp保存
                     List<Map<String, Object>> huancunpeos1 = new ArrayList<Map<String, Object>>();
-                    List<Map<String, Object>> huancunpeos2 = new ArrayList<Map<String, Object>>();
+                   // List<Map<String, Object>> huancunpeos2 = new ArrayList<Map<String, Object>>();
                     huancunpeos1 =(List<Map<String, Object>>) data;
-                    huancunpeos2 =(List<Map<String, Object>>) data;
+                   // huancunpeos2 =(List<Map<String, Object>>) data;
                     spUtil.saveInfo(getActivity(), "huancun" + 0, huancunpeos1);
-                    spUtil.saveInfo(getActivity(), "huancun" + 0, huancunpeos2);
+                    //spUtil.saveInfo(getActivity(), "huancun" + 0, huancunpeos2);
 
 
                     peos = (List<Map<String, Object>>) data;
                    // peos2 = (List<Map<String, Object>>) data;
-                    Log.i("xml", " 联网异步查询成功====peos数据：" + peos.toString());
+                    Log.i("xml", " fragment1联网异步查询成功====peos数据：" + peos.toString());
+                    Log.i("xml", " fragment1联网异步查询成功====peos数据：" + peos.size()+"条");
                    // adapter = new MyListAdapter(peos,getActivity());
                     //listView2.setAdapter(adapter);
                 }
@@ -211,7 +210,7 @@ public class Fragment1 extends Fragment {
                 }
             });
 
-        }
+        }*/
 
 
 
@@ -219,7 +218,7 @@ public class Fragment1 extends Fragment {
     //初始化数据
     private  void initDatas(){
          spUtil = new SpUtil();
-        constest=spUtil.getInfo(getActivity().getApplicationContext(), "huancun");
+        constest = spUtil.getInfo(getActivity().getApplicationContext(), "huancun");
         //根据sp中是否缓存了数据来选择是从本地加载还是联网
         if (constest.size()<2){
             //异步联网查询xml数据，组织机构数据
@@ -295,7 +294,7 @@ public class Fragment1 extends Fragment {
 				mDatas.add(new FileBean(2, 1, "name1","18822222222"));
 				mDatas.add(new FileBean(3, 1, "name1","18833333333"));
 				 */
-            Log.i("xml", " fragment6=======缓存中的mdatas：" + mDatas.size() + "条");
+            Log.i("xml", " fragment1=======缓存中的mdatas：" + mDatas.size() + "条");
             try {
                 mAdapter = new SimpleTreeAdapter<FileBean>(mTree, getActivity().getApplicationContext(), mDatas, 0);
 
@@ -358,30 +357,7 @@ public class Fragment1 extends Fragment {
         //更新
         return data2;
     }
-//获得登陆用户信息
-    private ArrayList<Map<String, Object>> getuserinfo(List<Map<String, Object>> constest,String phone){
-        ArrayList<Map<String, Object>> data2 = new ArrayList<Map<String, Object>>();
-        data2.clear();
-        int length = constest.size();
-        for (int i = 0; i < length; i++){
-            if (constest.get(i).get("phone").toString().equals(phone)){
-                Map<String,Object> item = new HashMap<String,Object>();
-                item.put("name",peos.get(i).get("name").toString());
-                item.put("phone", peos.get(i).get("phone").toString());
-                item.put("ranke", peos.get(i).get("ranke").toString());
-                data2.add(item);
-            }
 
-        }
-        return data2;
-    }
-
-
-    private String getphonesp(){
-        SharedPreferences preferences = getActivity().getSharedPreferences("userphone", Context.MODE_PRIVATE);
-        String userphone = preferences.getString("userphone", "--");
-        return userphone;
-    }
     public class SearchTask extends AsyncTask{
         public SearchTask() {
         }
