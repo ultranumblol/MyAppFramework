@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
 import com.wgz.ant.myappframework.db.DatabaseHelper;
 import com.wgz.ant.myappframework.util.SpUtil;
 
@@ -311,7 +312,14 @@ public class ContantActivity extends AppCompatActivity {
 
     }
 
-
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
     //初始化数据库
     private void initdb() {

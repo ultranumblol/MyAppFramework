@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
 import com.wgz.ant.myappframework.adapter.RecycleAdapter;
 import com.wgz.ant.myappframework.db.DatabaseHelper;
 
@@ -76,7 +77,14 @@ public class GroupManagerActivity extends AppCompatActivity {
         flush();
     }
 
-
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
     //刷新list
     private void flush(){
         data1 = new ArrayList<Map<String, Object>>();

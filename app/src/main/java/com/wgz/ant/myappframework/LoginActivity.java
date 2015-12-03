@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
 import com.wgz.ant.myappframework.util.CheckLogin;
 import com.wgz.ant.myappframework.util.OnDataFinishedListener;
 
@@ -240,7 +241,14 @@ public class LoginActivity extends AppCompatActivity  {
         }
     }
 
-
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
