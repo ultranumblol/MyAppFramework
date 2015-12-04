@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class GroupManagerActivity extends AppCompatActivity {
 
     DatabaseHelper dbh ;
@@ -80,9 +82,11 @@ public class GroupManagerActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        JPushInterface.onResume(this);
     }
     public void onPause() {
         super.onPause();
+        JPushInterface.onPause(this);
         MobclickAgent.onPause(this);
     }
     //刷新list

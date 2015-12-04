@@ -39,6 +39,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jpush.android.api.JPushInterface;
+
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private ViewPager mViewpager;
@@ -55,6 +58,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UmengUpdateAgent.update(this);
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
         setContentView(R.layout.activity_main);
         init();
     }
@@ -257,9 +262,11 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        JPushInterface.onResume(this);
     }
     public void onPause() {
         super.onPause();
+        JPushInterface.onPause(this);
         MobclickAgent.onPause(this);
     }
     @SuppressWarnings("StatementWithEmptyBody")

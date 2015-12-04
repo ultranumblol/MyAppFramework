@@ -34,6 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class ContantActivity extends AppCompatActivity {
     DatabaseHelper dbh;
     private List<Map<String, Object>> peos;//联系人列表
@@ -315,9 +317,11 @@ public class ContantActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        JPushInterface.onResume(this);
     }
     public void onPause() {
         super.onPause();
+        JPushInterface.onPause(this);
         MobclickAgent.onPause(this);
     }
 
