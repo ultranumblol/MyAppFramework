@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_gallery) {
             Intent intent = new Intent(MainActivity.this,MessageActivity.class);
-            intent.putExtra("title","企业精神");
+            intent.putExtra("title","企业文化");
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
             Intent intent = new Intent(MainActivity.this,MessageActivity.class);
