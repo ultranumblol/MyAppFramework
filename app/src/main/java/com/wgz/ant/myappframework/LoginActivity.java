@@ -30,8 +30,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.wgz.ant.myappframework.util.CheckLogin;
 import com.wgz.ant.myappframework.util.OnDataFinishedListener;
 
-import cn.jpush.android.api.JPushInterface;
-
 /**
  * A login screen that offers login via email/password.
  */
@@ -246,11 +244,11 @@ public class LoginActivity extends AppCompatActivity  {
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
-        JPushInterface.onResume(this);
+
     }
     public void onPause() {
         super.onPause();
-        JPushInterface.onPause(this);
+
         MobclickAgent.onPause(this);
     }
     /**
