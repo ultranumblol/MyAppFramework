@@ -355,6 +355,7 @@ public class ContantActivity extends AppCompatActivity {
         //更新
         return data2;
     }
+
     //初始化查询方法
     private void initquery(){
 
