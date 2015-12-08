@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.wgz.ant.myappframework.adapter.FragmentAdapter;
 import com.wgz.ant.myappframework.fragment.Fragment1;
@@ -55,7 +56,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //自动更新
         UmengUpdateAgent.update(this);
+        //消息推送
+        PushAgent mPushAgent = PushAgent.getInstance(getApplicationContext());
+        mPushAgent.enable();
+        PushAgent.getInstance(getApplicationContext()).onAppStart();
         setContentView(R.layout.activity_main);
         init();
     }
