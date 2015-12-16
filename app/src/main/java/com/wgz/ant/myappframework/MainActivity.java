@@ -53,9 +53,12 @@ public class MainActivity extends AppCompatActivity
     SpUtil spUtil;
     private TextView rank,name;
     private CoordinatorLayout rootlayout;
+    //爆炸区域
+   // private ExplosionField mExplosionField;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //自动更新
         UmengUpdateAgent.update(this);
         //消息推送
@@ -64,7 +67,27 @@ public class MainActivity extends AppCompatActivity
         PushAgent.getInstance(getApplicationContext()).onAppStart();
         setContentView(R.layout.activity_main);
         init();
+       /* mExplosionField = ExplosionField.attach2Window(this);
+        addListener(findViewById(R.id.rootLayout));*/
     }
+   /* private void addListener(View root) {
+        if (root instanceof ViewGroup) {
+            ViewGroup parent = (ViewGroup) root;
+            for (int i = 0; i < parent.getChildCount(); i++) {
+                addListener(parent.getChildAt(i));
+            }
+        } else {
+            root.setClickable(true);
+            root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mExplosionField.explode(v);
+                    v.setOnClickListener(null);
+                }
+            });
+        }
+    }*/
+
         private void init(){
             rootlayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);

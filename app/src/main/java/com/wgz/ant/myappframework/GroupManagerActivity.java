@@ -17,12 +17,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.wgz.ant.myappframework.adapter.RecycleAdapter;
 import com.wgz.ant.myappframework.db.DatabaseHelper;
+import com.wgz.ant.myappframework.explosionfield.ExplosionField;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +40,8 @@ public class GroupManagerActivity extends AppCompatActivity {
     private RecyclerView grouplist;
     RecycleAdapter adapter;
     CoordinatorLayout gmrootview;
+    //爆炸区域
+     private ExplosionField mExplosionField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,8 @@ public class GroupManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_manager);
         setTitle("分组管理");
         init();
+         mExplosionField = ExplosionField.attach2Window(this);
+        //addListener(findViewById(R.id.rootLayout));
     }
 
     @Override
@@ -87,6 +94,24 @@ public class GroupManagerActivity extends AppCompatActivity {
 
         MobclickAgent.onPause(this);
     }
+
+    private void addListener(View root) {
+        if (root instanceof ViewGroup) {
+            ViewGroup parent = (ViewGroup) root;
+            for (int i = 0; i < parent.getChildCount(); i++) {
+                addListener(parent.getChildAt(i));
+            }
+        } else {
+            root.setClickable(true);
+            root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mExplosionField.explode(v);
+                    v.setOnClickListener(null);
+                }
+            });
+        }
+    }
     //刷新list
     private void flush(){
         data1 = new ArrayList<Map<String, Object>>();
@@ -97,8 +122,13 @@ public class GroupManagerActivity extends AppCompatActivity {
         adapter.setOnItemClickLitener(new RecycleAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
+                //addListener(view);
                 TextView pidtv = (TextView) view.findViewById(R.id.gmpid);
                 TextView idtv = (TextView) view.findViewById(R.id.gmid);
+                ImageView dele = (ImageView) view.findViewById(R.id.deleteGroup);
+                //mExplosionField.explode(pidtv);
+               //mExplosionField.explode(idtv);
+                mExplosionField.explode(dele);
                 final String pid = pidtv.getText().toString();
                 final String gid = idtv.getText().toString();
                 Snackbar.make(gmrootview, "是否删除该分组?", Snackbar.LENGTH_SHORT).setAction("确定", new View.OnClickListener() {
