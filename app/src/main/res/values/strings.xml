@@ -20,4 +20,5 @@
         completions."
     </string>
     <string name="title_activity_message">MessageActivity</string>
+    <string name="title_activity_face">FaceActivity</string>
 </resources>

@@ -313,10 +313,13 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("title","关于本产品");
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(MainActivity.this,MessageActivity.class);
-            intent.putExtra("title","关于作者");
+            //Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+           // intent.putExtra("title","关于作者");
 
-            startActivity(intent);
+            Intent intent1 = new Intent(MainActivity.this,FaceActivity.class);
+            startActivity(intent1);
+
+           // startActivity(intent);
         } else if (id == R.id.nav_share) {
             Intent intent = new Intent(MainActivity.this,MessageActivity.class);
             intent.putExtra("title","意见反馈");
