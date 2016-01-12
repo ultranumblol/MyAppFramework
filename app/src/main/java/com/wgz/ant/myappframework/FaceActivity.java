@@ -88,7 +88,10 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-
+    /*
+    * 照片压缩
+    *
+    * */
     private void resizePhoto() {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds=true;
@@ -224,6 +227,7 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fab_face1:
+                //选择手机内的图片
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent,PICK_CODE);

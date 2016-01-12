@@ -175,7 +175,6 @@ public class GroupManagerActivity extends AppCompatActivity {
             builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
-                    // int num = (int) (1000 * Math.random()) + 2;
                     int num2 = data1.size() + 1;
                     insertGroup(inputServer.getText().toString(), num2 + "");
                     flush();

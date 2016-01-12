@@ -46,6 +46,13 @@
 
     <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <!-- 扫码权限 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/bg06"
@@ -70,6 +77,16 @@
         <activity
             android:name=".MessageActivity"
             android:label="@string/title_activity_message" />
+        <activity
+            android:name=".zxing.activity.CaptureActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity android:name=".BarCodeTestActivity" />
+        <activity android:name=".autochat.ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            ></activity>
 
         <meta-data
             android:name="UMENG_APPKEY"
@@ -79,20 +96,20 @@
             android:value="Channel ID" />
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="66c0accbc4ddda7f214f2c94c1b26a7a"></meta-data>
+            android:value="66c0accbc4ddda7f214f2c94c1b26a7a" />
 
         <service
             android:name="com.umeng.update.net.DownloadingService"
-            android:process=":DownloadingService"></service>
+            android:process=":DownloadingService" />
 
         <activity
             android:name="com.umeng.update.UpdateDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- 监听通知点击或者忽略处理的广播 -->
         <receiver
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
-            android:exported="false"></receiver>
+            android:exported="false" />
 
         <!-- 监听开机运行、网络连接变化、卸载的广播 -->
         <receiver
@@ -214,7 +231,7 @@
         <activity
             android:name=".FaceActivity"
             android:label="@string/title_activity_face"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

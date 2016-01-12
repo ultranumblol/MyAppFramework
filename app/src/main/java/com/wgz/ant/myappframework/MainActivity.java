@@ -27,6 +27,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.wgz.ant.myappframework.adapter.FragmentAdapter;
+import com.wgz.ant.myappframework.autochat.ChatActivity;
 import com.wgz.ant.myappframework.fragment.Fragment1;
 import com.wgz.ant.myappframework.fragment.Fragment2;
 import com.wgz.ant.myappframework.util.CheckNetWork;
@@ -299,19 +300,23 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camara) {
-            Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+           /* Intent intent = new Intent(MainActivity.this,MessageActivity.class);
             intent.putExtra("title","公司简介");
-            startActivity(intent);
+            startActivity(intent);*/
 
+            startActivity(new Intent(MainActivity.this, ChatActivity.class));
 
         } else if (id == R.id.nav_gallery) {
             Intent intent = new Intent(MainActivity.this,MessageActivity.class);
             intent.putExtra("title","企业文化");
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-            Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+           /* Intent intent = new Intent(MainActivity.this,MessageActivity.class);
             intent.putExtra("title","关于本产品");
-            startActivity(intent);
+            startActivity(intent);*/
+            Intent intent1 = new Intent(MainActivity.this,BarCodeTestActivity.class);
+            startActivity(intent1);
+
         } else if (id == R.id.nav_manage) {
             //Intent intent = new Intent(MainActivity.this,MessageActivity.class);
            // intent.putExtra("title","关于作者");
