@@ -65,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final String toMsg = inputmsg.getText().toString();
                 if (TextUtils.isEmpty(toMsg)){
-                    Toast.makeText(ChatActivity.this,"消息不能为空！",Toast.LENGTH_SHORT);
+                    Toast.makeText(ChatActivity.this,"消息不能为空！",Toast.LENGTH_SHORT).show();
                     return;
 
                 }
@@ -92,7 +92,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void initdata() {
         mDatas = new ArrayList<ChatMsgBean>();
-        mDatas.add(new ChatMsgBean(new Date(), ChatMsgBean.Type.INCOMING," 我是光哥，什么事!"));
+        mDatas.add(new ChatMsgBean(new Date(), ChatMsgBean.Type.INCOMING," hi!"));
         //mDatas.add(new ChatMsgBean(new Date(), ChatMsgBean.Type.OUTCOMING,"hihihihi!"));
         adapter = new ChatMsgAdapter(this,mDatas);
         mMsgs.setAdapter(adapter);

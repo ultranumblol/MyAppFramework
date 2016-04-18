@@ -23,4 +23,5 @@
     <string name="title_activity_message">MessageActivity</string>
     <string name="title_activity_face">FaceActivity</string>
     <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_baoxiu">BaoxiuActivity</string>
 </resources>

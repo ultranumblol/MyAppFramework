@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,6 +48,7 @@ public class GroupManagerActivity extends AppCompatActivity {
         dbh = new DatabaseHelper(getApplicationContext());
         setContentView(R.layout.activity_group_manager);
         setTitle("分组管理");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         init();
          mExplosionField = ExplosionField.attach2Window(this);
         //addListener(findViewById(R.id.rootLayout));
@@ -68,7 +68,7 @@ public class GroupManagerActivity extends AppCompatActivity {
         gmrootview = (CoordinatorLayout) findViewById(R.id.gmana_rootview);
         maddgroup = (TextView) findViewById(R.id.addgroup);
         grouplist = (RecyclerView) findViewById(R.id.recycler_view);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab3);
+       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab3);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +80,7 @@ public class GroupManagerActivity extends AppCompatActivity {
                 setResult(RESULT_OK, intent);
                 finish();
             }
-        });
+        });*/
         flush();
     }
 
@@ -184,6 +184,11 @@ public class GroupManagerActivity extends AppCompatActivity {
             builder.show();
 
             return true;
+        }
+        if (id == android.R.id.home){
+            finish();
+            return true;
+
         }
        /* if (id == R.id.action_add) {
             Snackbar.make(rootlayout, "music！", Snackbar.LENGTH_LONG)

@@ -2,20 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_menu_camera"
-            android:title="和开发者聊天" />
-        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="企业文化" />
+        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_dialog_info"
+            android:title="设备报修" />
+       <!-- <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
+            android:title="抽奖转盘" />
         <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_save"
             android:title="条码扫描" />
         <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_my_calendar"
-            android:title="测测你几岁" />
+            android:title="测测你几岁" />-->
     </group>
 
     <item android:title="其他">
         <menu>
-            <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
-                android:title="意见反馈" />
+            <!--<item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
+                android:title="意见反馈" />-->
             <item android:id="@+id/nav_send" android:icon="@android:drawable/ic_menu_revert"
                 android:title="退出登录" />
         </menu>

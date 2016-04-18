@@ -27,7 +27,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.wgz.ant.myappframework.adapter.FragmentAdapter;
-import com.wgz.ant.myappframework.autochat.ChatActivity;
 import com.wgz.ant.myappframework.fragment.Fragment1;
 import com.wgz.ant.myappframework.fragment.Fragment2;
 import com.wgz.ant.myappframework.util.CheckNetWork;
@@ -304,16 +303,16 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("title","公司简介");
             startActivity(intent);*/
 
-            startActivity(new Intent(MainActivity.this, ChatActivity.class));
+            startActivity(new Intent(MainActivity.this, BaoxiuActivity.class));
 
-        } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(MainActivity.this,MessageActivity.class);
-            intent.putExtra("title","企业文化");
+        } /*else if (id == R.id.nav_gallery) {
+            Intent intent = new Intent(MainActivity.this,SurfaceActivity.class);
+            //intent.putExtra("title","企业文化");
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-           /* Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+           *//* Intent intent = new Intent(MainActivity.this,MessageActivity.class);
             intent.putExtra("title","关于本产品");
-            startActivity(intent);*/
+            startActivity(intent);*//*
             Intent intent1 = new Intent(MainActivity.this,BarCodeTestActivity.class);
             startActivity(intent1);
 
@@ -329,7 +328,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this,MessageActivity.class);
             intent.putExtra("title","意见反馈");
             startActivity(intent);
-        } else if (id == R.id.nav_send) {
+        }*/ else if (id == R.id.nav_send) {
             Snackbar.make(rootlayout, "确认注销账号？", Snackbar.LENGTH_LONG)
                     .setAction("注销", new View.OnClickListener() {
                         @Override

@@ -82,11 +82,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".BarCodeTestActivity" />
-        <activity android:name=".autochat.ChatActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            ></activity>
+        <activity
+            android:name=".autochat.ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="UMENG_APPKEY"
@@ -232,6 +232,11 @@
             android:name=".FaceActivity"
             android:label="@string/title_activity_face"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SurfaceActivity" />
+        <activity
+            android:name=".BaoxiuActivity"
+            android:label="@string/title_activity_baoxiu"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

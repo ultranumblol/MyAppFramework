@@ -44,8 +44,16 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_face);
+
         setTitle("人脸识别-测测你几岁");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         initViews();
         initEvents();
 
@@ -240,7 +248,7 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
                 else {
-                    mPhotoImg = BitmapFactory.decodeResource(getResources(),R.drawable.wuyanzu1);
+                    mPhotoImg = BitmapFactory.decodeResource(getResources(),R.drawable.wuwuwu);
 
 
                 }

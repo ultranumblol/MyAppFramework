@@ -19,7 +19,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:id="@+id/face_img"
-        android:src="@drawable/wuyanzu1"
+        android:src="@drawable/wuwuwu"
         />
 
     <FrameLayout

@@ -12,11 +12,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -47,6 +47,7 @@ public class ContantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contant);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initdb();
         initview();
         initquery();
@@ -64,8 +65,18 @@ public class ContantActivity extends AppCompatActivity {
         super.finish();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()== android.R.id.home){
+            finish();
+            return true;
+
+        }
+        return onOptionsItemSelected(item);
+    }
+
     private void initview() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab2);
+       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab2);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,7 +88,7 @@ public class ContantActivity extends AppCompatActivity {
                 setResult(RESULT_OK, intent);
                 finish();
             }
-        });
+        });*/
         mcdlayout = (CoordinatorLayout) findViewById(R.id.contant_rootview);
         list1 = (ListView) findViewById(R.id.list_1);
         //短按打电话监听

@@ -28,9 +28,9 @@
             android:divider="@color/colorPrimaryDark"
             ></com.wgz.ant.myappframework.view.ScrollListView>
     </android.support.v4.widget.NestedScrollView>
-    <android.support.design.widget.FloatingActionButton android:id="@+id/fab2"
+  <!--  <android.support.design.widget.FloatingActionButton android:id="@+id/fab2"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_gravity="bottom|end" android:layout_margin="5dp"
         android:src="@drawable/icon_title_back"
-        />
+        />-->
 </android.support.design.widget.CoordinatorLayout>
